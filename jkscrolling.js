@@ -5,7 +5,7 @@ window.onkeypress = function(e) {
 	if (posts.length <= 1) return;
 	if (typeof(current) === "undefined") return;
 	alignHeight = getVerticalPos(getAlign());
-	var speed = 200;
+	var speed = 100;
 	switch (e.keyCode) {
 		case 106: // j
 			scrollDown(speed);
