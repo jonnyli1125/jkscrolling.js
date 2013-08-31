@@ -18,12 +18,12 @@ window.onkeypress = function(e) {
 function scrollDown(speed) {
 	var newPost = current.nextElementSibling;
 	if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.nextElementSibling; // compatibility with endless scrolling
-	if (newPost != null) scrollTo(document.body, newPost.offsetTop - alignHeight, speed);
+	if (newPost != null && newPost.dataset.jks == "post") scrollTo(document.body, newPost.offsetTop - alignHeight, speed);
 }
 function scrollUp(speed) {
 	var newPost = current.previousElementSibling;
 	if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.previousElementSibling; // compatibility with endless scrolling
-	if (newPost != null) scrollTo(document.body, newPost.offsetTop - alignHeight, speed);
+	if (newPost != null && newPost.dataset.jks == "post") scrollTo(document.body, newPost.offsetTop - alignHeight, speed);
 }
 window.onscroll = function() {
 	alignHeight = getVerticalPos(getAlign());
