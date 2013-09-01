@@ -7,10 +7,10 @@ window.onkeypress = function(e) {
 	var speed = 100;
 	switch (e.keyCode) {
 		case 106: // j
-			scrollDown(speed);
+			goDown(speed);
 			break;
 		case 107: // k
-			scrollUp(speed);
+			goUp(speed);
 			break;
 	}
 };
@@ -30,14 +30,14 @@ function calibrate() {
 		}
 	}
 }
-function scrollDown(speed) {
+function goDown(speed) {
 	var newPost = typeof(current) === "undefined" ? posts[0] : current.nextElementSibling;
 	if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.nextElementSibling; // compatibility with endless scrolling
 	if (newPost != null && newPost.dataset.jks == "post") scrollTo(document.body, newPost.offsetTop - alignHeight, speed);
 }
-function scrollUp(speed) {
+function goUp(speed) {
 	if (typeof(current) === "undefined") return;
-	var newPost = getVerticalPos(current) < alignHeight ? current : current.previousElementSibling;
+	var newPost = Math.round(getVerticalPos(current)) < alignHeight ? current : current.previousElementSibling;
 	if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.previousElementSibling; // compatibility with endless scrolling
 	if (newPost != null && newPost.dataset.jks == "post") scrollTo(document.body, newPost.offsetTop - alignHeight, speed);
 }
