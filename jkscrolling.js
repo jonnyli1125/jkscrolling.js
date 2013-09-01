@@ -14,7 +14,9 @@ window.onkeypress = function(e) {
 			break;
 	}
 };
-window.onscroll = function() {
+window.onscroll = function() { calibrate(); };
+window.onload = function() { calibrate(); };
+function calibrate() {
 	alignHeight = getVerticalPos(getAlign());
 	var fromTop = getScrollTop() + alignHeight;
 	posts = getAllPosts();
@@ -27,7 +29,7 @@ window.onscroll = function() {
 			current = post;
 		}
 	}
-};
+}
 function scrollDown(speed) {
 	var newPost = typeof(current) === "undefined" ? posts[0] : current.nextElementSibling;
 	if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.nextElementSibling; // compatibility with endless scrolling
