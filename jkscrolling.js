@@ -6,25 +6,26 @@ var jkscrolling = {
 	alignHeight: 0,
 	posts: [],
 	current: null,
+	animating: false,
 	initialize: function() {
 		this.alignHeight = this.getVerticalPos(this.getAlign());
 		this.posts = this.getAllPosts();
 		this.calibrate();
 	},
-	keypress: function(e) {
+	keydown: function(e) {
 		if (this.posts.length <= 0) return;
 		var speed = 100;
 		switch (e.keyCode) {
-			case 106: // j
+			case 74: // j
 				this.goDown(speed);
 				break;
-			case 107: // k
+			case 75: // k
 				this.goUp(speed);
 				break;
 		}
 	},
 	calibrate: function() {
-		this.alignHeight = this.getVerticalPos(this.getAlign()) || 0;
+		this.alignHeight = this.getAlign().length ? this.getVerticalPos(this.getAlign()) : 0;
 		var fromTop = this.getScrollTop() + this.alignHeight;
 		this.posts = this.getAllPosts();
 		if (this.posts.length <= 0) return;
@@ -38,18 +39,23 @@ var jkscrolling = {
 		}
 	},
 	goDown: function(speed) {
+		if (this.animating) return;
 		var newPost = typeof(this.current) === "undefined" || this.current == null ? this.posts[0] : this.current.nextElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.nextElementSibling; // compatibility with endless scrolling
-			if (newPost.dataset.jks == "post") this.scrollTo(document.body, newPost.offsetTop - this.alignHeight, speed);
+			if (newPost.dataset.jks == "post") {
+				this.scrollTo(document.body, newPost.offsetTop - this.alignHeight, speed);
+			}
 		}
 	},
 	goUp: function(speed) {
-		if (typeof(this.current) === "undefined") return;
+		if (this.animating || typeof(this.current) === "undefined") return;
 		var newPost = Math.round(this.getVerticalPos(this.current)) < this.alignHeight ? this.current : this.current.previousElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.previousElementSibling; // compatibility with endless scrolling
-			if (newPost.dataset.jks == "post") this.scrollTo(document.body, newPost.offsetTop - this.alignHeight, speed);
+			if (newPost.dataset.jks == "post") {
+				this.scrollTo(document.body, newPost.offsetTop - this.alignHeight, speed);
+			}
 		}
 	},
 	scrollTo: function(element, to, duration) {
@@ -58,16 +64,18 @@ var jkscrolling = {
 		change = to - start,
 		currentTime = 0,
 		increment = 20;
-		if (jQuery) $(element).animate({ scrollTop: to }, duration);
-		else {
+		this.animating = true;
+		var complete = function() { jkscrolling.animating = false; };
+		if (typeof(jQuery) === "undefined") {
 			var animateScroll = function() {
 				currentTime += increment;
 				var val = Math.easeInOutQuad(currentTime, start, change, duration);
 				element.scrollTop = val;
 				if (currentTime < duration) setTimeout(animateScroll, increment);
+				else complete();
 			};
 			animateScroll();
-		}
+		} else $(element).animate({ scrollTop: to }, duration, "swing", complete);
 	},
 	getScrollTop: function() {
 		if (typeof pageYOffset != 'undefined') {
@@ -97,6 +105,6 @@ Math.easeInOutQuad = function (t, b, c, d) {
 	t--;
 	return -c/2 * (t*(t-2) - 1) + b;
 };
-window.onkeypress = function(e) { jkscrolling.keypress(e); };
+window.onkeydown = function(e) { jkscrolling.keydown(e); };
 window.onscroll = function() { jkscrolling.calibrate(); };
 window.onload = function() { jkscrolling.initialize(); };
