@@ -12,8 +12,7 @@ var jkscrolling = {
 		this.calibrate();
 	},
 	keypress: function(e) {
-		if (this.posts.length <= 1) return;
-		this.alignHeight = this.getVerticalPos(this.getAlign());
+		if (this.posts.length <= 0) return;
 		var speed = 100;
 		switch (e.keyCode) {
 			case 106: // j
@@ -25,7 +24,7 @@ var jkscrolling = {
 		}
 	},
 	calibrate: function() {
-		this.alignHeight = this.getVerticalPos(this.getAlign());
+		this.alignHeight = this.getVerticalPos(this.getAlign()) || 0;
 		var fromTop = this.getScrollTop() + this.alignHeight;
 		this.posts = this.getAllPosts();
 		if (this.posts.length <= 0) return;
@@ -59,13 +58,16 @@ var jkscrolling = {
 		change = to - start,
 		currentTime = 0,
 		increment = 20;
-		var animateScroll = function() {
-			currentTime += increment;
-			var val = Math.easeInOutQuad(currentTime, start, change, duration);
-			element.scrollTop = val;
-			if(currentTime < duration) { setTimeout(animateScroll, increment); }
-		};
-		animateScroll();
+		if (jQuery) $(element).animate({ scrollTop: to }, duration);
+		else {
+			var animateScroll = function() {
+				currentTime += increment;
+				var val = Math.easeInOutQuad(currentTime, start, change, duration);
+				element.scrollTop = val;
+				if (currentTime < duration) setTimeout(animateScroll, increment);
+			};
+			animateScroll();
+		}
 	},
 	getScrollTop: function() {
 		if (typeof pageYOffset != 'undefined') {
