@@ -7,26 +7,25 @@ var jkscrolling = {
 	posts: [],
 	current: null,
 	animating: false,
+	scrollSpeed: 125,
 	initialize: function() {
-		this.alignHeight = this.getVerticalPos(this.getAlign());
 		this.posts = this.getAllPosts();
 		this.calibrate();
 	},
 	keydown: function(e) {
 		if (this.posts.length <= 0) return;
-		var speed = 100;
 		switch (e.keyCode) {
 			case 74: // j
-				this.goDown(speed);
+				this.goDown(this.scrollSpeed);
 				break;
 			case 75: // k
-				this.goUp(speed);
+				this.goUp(this.scrollSpeed);
 				break;
 		}
 	},
 	calibrate: function() {
-		this.alignHeight = this.getAlign().length ? this.getVerticalPos(this.getAlign()) : 0;
-		var fromTop = this.getScrollTop() + this.alignHeight;
+		this.alignHeight = this.getAlign() != null ? this.getVerticalPos(this.getAlign()) : 0;
+		var fromTop = this.getScrollTop() + this.alignHeight + 1; // 1 pixel tolerance
 		this.posts = this.getAllPosts();
 		if (this.posts.length <= 0) return;
 		var last = 0;
@@ -65,7 +64,7 @@ var jkscrolling = {
 		currentTime = 0,
 		increment = 20;
 		this.animating = true;
-		var complete = function() { jkscrolling.animating = false; };
+		var complete = function() { jkscrolling.animating = false; element.scrollTop = to; };
 		if (typeof(jQuery) === "undefined") {
 			var animateScroll = function() {
 				currentTime += increment;
