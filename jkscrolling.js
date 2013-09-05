@@ -8,9 +8,10 @@ var jkscrolling = {
 	current: null,
 	animating: false,
 	scrollSpeed: 125,
+	tolerance: 1,
 	initialize: function() {
 		this.posts = this.getAllPosts();
-		this.calibrate();
+		this.calibrate(this.tolerance);
 	},
 	keydown: function(e) {
 		if (this.posts.length <= 0) return;
@@ -23,9 +24,10 @@ var jkscrolling = {
 				break;
 		}
 	},
-	calibrate: function() {
+	calibrate: function(tolerance) {
+		if (typeof(tolerance) == "undefined") tolerance = 1; // scrolling not always perfect, default 1 pixel tolerance
 		this.alignHeight = this.getAlign() != null ? this.getVerticalPos(this.getAlign()) : 0;
-		var fromTop = this.getScrollTop() + this.alignHeight + 1; // 1 pixel tolerance
+		var fromTop = this.getScrollTop() + this.alignHeight + tolerance;
 		this.posts = this.getAllPosts();
 		if (this.posts.length <= 0) return;
 		var last = 0;
@@ -105,5 +107,5 @@ Math.easeInOutQuad = function (t, b, c, d) {
 	return -c/2 * (t*(t-2) - 1) + b;
 };
 window.onkeydown = function(e) { jkscrolling.keydown(e); };
-window.onscroll = function() { jkscrolling.calibrate(); };
+window.onscroll = function() { jkscrolling.calibrate(jkscrolling.tolerance); };
 window.onload = function() { jkscrolling.initialize(); };
