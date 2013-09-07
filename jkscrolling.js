@@ -14,21 +14,6 @@ var jkscrolling = {
 		this.posts = this.getAllPosts();
 		this.calibrate(this.tolerance);
 		this.ie = navigator.appName == "Microsoft Internet Explorer";
-		if (typeof(jQuery) == "undefined") this.getScript("http://code.jquery.com/jquery-latest.min.js");
-	},
-	getScript: function(url, success) {
-		var script = document.createElement('script');
-		script.src = url;
-		var head = document.getElementsByTagName('head')[0], done = false;
-		script.onload = script.onreadystatechange = function() {
-			if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
-				done = true;
-				success();
-				script.onload = script.onreadystatechange = null;
-				head.removeChild(script);
-			}
-		};
-		head.appendChild(script);
 	},
 	keydown: function(e) {
 		if (this.posts.length <= 0) return;
