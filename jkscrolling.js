@@ -62,7 +62,7 @@ var jkscrolling = {
 		currentTime = 0,
 		increment = 20;
 		this.animating = true;
-		var complete = function() { jkscrolling.animating = false; element.scrollTop = to; console.log("complete scrollTo"); };
+		var complete = function() { jkscrolling.animating = false; element.scrollTop = to; };
 		if (typeof(jQuery) === "undefined") {
 			var animateScroll = function() {
 				currentTime += increment;
