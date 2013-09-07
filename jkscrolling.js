@@ -14,22 +14,21 @@ var jkscrolling = {
 		this.posts = this.getAllPosts();
 		this.calibrate(this.tolerance);
 		this.ie = navigator.appName == "Microsoft Internet Explorer";
-		var getScript = function(url, success) {
-			var script = document.createElement('script');
-			script.src = url;
-			var head = document.getElementsByTagName('head')[0], done = false;
-			script.onload = script.onreadystatechange = function() {
-				if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
-					done = true;
-					success();
-					script.onload = script.onreadystatechange = null;
-					head.removeChild(script);
-				};
-			};
-			head.appendChild(script);
+		if (typeof(jQuery) == "undefined") this.getScript("http://code.jquery.com/jquery-latest.min.js");
+	},
+	getScript: function(url, success) {
+		var script = document.createElement('script');
+		script.src = url;
+		var head = document.getElementsByTagName('head')[0], done = false;
+		script.onload = script.onreadystatechange = function() {
+			if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
+				done = true;
+				success();
+				script.onload = script.onreadystatechange = null;
+				head.removeChild(script);
+			}
 		};
-		if (typeof(jQuery) == "undefined") getScript("http://code.jquery.com/jquery-latest.min.js");
-		if (this.ie) getScript("http://jonny.li/themes/utils/html5-dataset");
+		head.appendChild(script);
 	},
 	keydown: function(e) {
 		if (this.posts.length <= 0) return;
@@ -62,7 +61,8 @@ var jkscrolling = {
 		var newPost = typeof(this.current) === "undefined" || this.current == null ? this.posts[0] : this.current.nextElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.nextElementSibling; // compatibility with endless scrolling
-			if (newPost.dataset.jks == "post") this.scrollTo(this.ie ? document.querySelector("html") : document.body, newPost.offsetTop - this.alignHeight, speed);
+			if (newPost.getAttribute("data-jks") == "post") this.scrollTo(this.ie ? document.querySelector("html") : document.body, newPost.offsetTop - this.alignHeight, speed);
+			// i wanted to use element.dataset but internet explorer happened, so :(
 		}
 	},
 	goUp: function(speed) {
@@ -70,7 +70,7 @@ var jkscrolling = {
 		var newPost = Math.round(this.getVerticalPos(this.current)) < this.alignHeight ? this.current : this.current.previousElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.previousElementSibling; // compatibility with endless scrolling
-			if (newPost.dataset.jks == "post") this.scrollTo(this.ie ? document.querySelector("html") : document.body, newPost.offsetTop - this.alignHeight, speed);
+			if (newPost.getAttribute("data-jks") == "post") this.scrollTo(this.ie ? document.querySelector("html") : document.body, newPost.offsetTop - this.alignHeight, speed);
 		}
 	},
 	scrollTo: function(element, to, duration) {
