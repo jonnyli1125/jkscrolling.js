@@ -44,9 +44,7 @@ var jkscrolling = {
 		var newPost = typeof(this.current) === "undefined" || this.current == null ? this.posts[0] : this.current.nextElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.nextElementSibling; // compatibility with endless scrolling
-			if (newPost.dataset.jks == "post") {
-				this.scrollTo(document.body, newPost.offsetTop - this.alignHeight, speed);
-			}
+			if (newPost.dataset.jks == "post") this.scrollTo(navigator.appName == "Microsoft Internet Explorer" ? document.querySelector("html") : document.body, newPost.offsetTop - this.alignHeight, speed);
 		}
 	},
 	goUp: function(speed) {
@@ -54,9 +52,7 @@ var jkscrolling = {
 		var newPost = Math.round(this.getVerticalPos(this.current)) < this.alignHeight ? this.current : this.current.previousElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.previousElementSibling; // compatibility with endless scrolling
-			if (newPost.dataset.jks == "post") {
-				this.scrollTo(document.body, newPost.offsetTop - this.alignHeight, speed);
-			}
+			if (newPost.dataset.jks == "post") this.scrollTo(navigator.appName == "Microsoft Internet Explorer" ? document.querySelector("html") : document.body, newPost.offsetTop - this.alignHeight, speed);
 		}
 	},
 	scrollTo: function(element, to, duration) {
@@ -66,7 +62,7 @@ var jkscrolling = {
 		currentTime = 0,
 		increment = 20;
 		this.animating = true;
-		var complete = function() { jkscrolling.animating = false; element.scrollTop = to; };
+		var complete = function() { jkscrolling.animating = false; element.scrollTop = to; console.log("complete scrollTo"); };
 		if (typeof(jQuery) === "undefined") {
 			var animateScroll = function() {
 				currentTime += increment;
