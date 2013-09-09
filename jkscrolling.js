@@ -17,12 +17,13 @@ var jkscrolling = {
 	},
 	keydown: function(e) {
 		if (this.posts.length <= 0) return;
+		var tag = e.target.tagName.toLowerCase();
 		switch (e.keyCode) {
 			case 74: // j
-				this.goDown(this.scrollSpeed);
+				if (tag != "input" && tag != "textarea") this.goDown(this.scrollSpeed);
 				break;
 			case 75: // k
-				this.goUp(this.scrollSpeed);
+				if (tag != "input" && tag != "textarea") this.goUp(this.scrollSpeed);
 				break;
 		}
 	},
