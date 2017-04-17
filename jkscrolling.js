@@ -52,7 +52,7 @@ var jkscrolling = {
 		}
 	},
 	goUp: function(speed) {
-		if (this.animating || typeof(this.current) === "undefined" || this.posts.indexOf(this.current) <= 0) return;
+		if (this.animating || typeof(this.current) === "undefined" || Array.prototype.indexOf.call(this.posts, this.current) <= 0) return;
 		var newPost = Math.round(this.getVerticalPos(this.current)) < this.alignHeight ? this.current : this.current.previousElementSibling;
 		if (newPost != null) {
 			if (newPost.className == "tumblrAutoPager_page_info") newPost = newPost.previousElementSibling; // compatibility with endless scrolling
